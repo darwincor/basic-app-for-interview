@@ -1,9 +1,9 @@
-package com.example.basicappforinterview.domain
+package com.example.basicappforinterview.data.datasource
 
 import com.example.basicappforinterview.domain.model.Video
 import com.example.basicappforinterview.domain.model.VideoDetail
 
-interface Repository {
+interface RemoteDataSource {
     suspend fun getVideos(): List<Video>
     suspend fun getVideoDetails(videoId: String): VideoDetail
 }

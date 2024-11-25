@@ -61,7 +61,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     //Image loading
-    implementation(libs.coil)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)

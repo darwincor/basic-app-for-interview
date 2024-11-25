@@ -1,9 +1,12 @@
 package com.example.basicappforinterview.presentation.videodetails
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -14,14 +17,23 @@ fun VideoDetailsScreen(
     viewModel: VideoDetailsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    VideoDetailsContent(state.id)
+    VideoDetailsContent(isLoading = state.isLoading, id = state.id)
 }
 
 @Composable
-fun VideoDetailsContent(id: String) {
+fun VideoDetailsContent(
+    isLoading: Boolean = false,
+    id: String
+) {
     Box(
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "The id is $id")
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
+        else {
+            Text(text = "The id is $id")
+        }
     }
 }
