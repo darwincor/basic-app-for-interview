@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.basicappforinterview.presentation.common.VideoDetailsScreen
+import com.example.basicappforinterview.presentation.common.VideosScreen
 import com.example.basicappforinterview.presentation.videodetails.VideoDetailsScreen
 import com.example.basicappforinterview.presentation.videos.VideosScreen
 import com.example.basicappforinterview.ui.theme.BasicAppForInterviewTheme
@@ -37,13 +39,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "videos",
+            startDestination = VideosScreen,
             modifier = modifier.padding(innerPadding)
         ) {
-            composable("videos") {
+            composable<VideosScreen> {
                 VideosScreen(navController = navController)
             }
-            composable("videoDetails") {
+            composable<VideoDetailsScreen> {
                 VideoDetailsScreen(navController = navController)
             }
         }
