@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.basicappforinterview.presentation.videodetails.VideoDetailsScreen
 import com.example.basicappforinterview.presentation.videos.VideosScreen
 import com.example.basicappforinterview.ui.theme.BasicAppForInterviewTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
