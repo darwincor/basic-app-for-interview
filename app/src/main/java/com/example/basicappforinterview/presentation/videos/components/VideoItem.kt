@@ -65,7 +65,7 @@ fun crossfade(b: Boolean) {
 fun VideoItemPreview() {
     VideoItem(
         Video(
-            id = "Title",
+            id = 0,
             title = "This is a title",
             thumbnail = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
         )

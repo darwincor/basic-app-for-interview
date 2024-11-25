@@ -7,5 +7,5 @@ object VideosScreen
 
 @Serializable
 data class VideoDetailsScreen(
-    val videoId: String
+    val videoId: Int
 )

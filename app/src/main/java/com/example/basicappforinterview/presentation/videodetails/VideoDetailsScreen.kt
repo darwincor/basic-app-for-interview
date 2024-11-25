@@ -23,7 +23,7 @@ fun VideoDetailsScreen(
 @Composable
 fun VideoDetailsContent(
     isLoading: Boolean = false,
-    id: String
+    id: Int
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
