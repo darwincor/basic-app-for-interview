@@ -5,4 +5,5 @@ data class VideoDetails(
     val title: String = "",
     val description: String = "",
     val thumbnail: String = "",
+    val backdrop: String = "",
 )

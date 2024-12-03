@@ -5,6 +5,7 @@ data class VideoDetailsState(
     val title: String = "",
     val description: String = "",
     val thumbnail: String = "",
+    val backdrop: String = "",
     val duration: String = "",
     val isLoading: Boolean = false,
     val error: String = ""

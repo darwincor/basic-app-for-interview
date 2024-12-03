@@ -17,4 +17,5 @@ fun VideoDetailsDto.toDomain() = VideoDetails(
     title = originalTitle,
     description = overview,
     thumbnail = "https://image.tmdb.org/t/p/w500$posterPath",
+    backdrop = "https://image.tmdb.org/t/p/w500$backdropPath",
 )
