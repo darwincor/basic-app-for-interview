@@ -34,9 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    Scaffold(
-
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = VideosScreen,

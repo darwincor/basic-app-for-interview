@@ -1,7 +1,6 @@
 package com.example.basicappforinterview.data.datasource
 
 import com.example.basicappforinterview.data.model.video.VideoDto
-import com.example.basicappforinterview.data.model.video.VideosDto
 import com.example.basicappforinterview.data.model.videoDetails.VideoDetailsDto
 
 interface RemoteDataSource {
