@@ -7,26 +7,36 @@ import androidx.navigation.toRoute
 import com.example.basicappforinterview.domain.usecase.GetVideoDetails
 import com.example.basicappforinterview.presentation.common.VideoDetailsScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VideoDetailsViewModel @Inject constructor(
     private val getVideoDetails: GetVideoDetails,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<VideoDetailsScreen>()
 
+    private var hasLoadedInitialData = false
     private var _state = MutableStateFlow(VideoDetailsState(id = args.videoId))
     val state: StateFlow<VideoDetailsState> = _state
-
-    init {
-        getVideoDetails(args.videoId.toString())
-    }
+        .onStart {
+            if (!hasLoadedInitialData) {
+                getVideoDetails(args.videoId.toString())
+                hasLoadedInitialData = true
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            VideoDetailsState(id = args.videoId)
+        )
 
     private fun getVideoDetails(id: String) {
         viewModelScope.launch {
