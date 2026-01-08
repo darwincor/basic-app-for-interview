@@ -1,6 +1,5 @@
 package com.example.basicappforinterview.data.api
 
-import com.example.basicappforinterview.data.model.video.VideoDto
 import com.example.basicappforinterview.data.model.video.VideosDto
 import com.example.basicappforinterview.data.model.videoDetails.VideoDetailsDto
 import retrofit2.Response

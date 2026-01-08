@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">BasicAppForInterview</string>
+    <string name="back">Back</string>
+    <string name="watch_movie">Watch Movie</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="backdrop">Backdrop</string>
+    <string name="overview">Overview</string>
+    <string name="video_gallery">Video Gallery</string>
 </resources>

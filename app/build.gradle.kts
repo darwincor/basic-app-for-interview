@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.example.basicappforinterview"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.basicappforinterview"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 

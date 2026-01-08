@@ -11,6 +11,7 @@
 /.idea/AndroidProjectSystem.xml
 /.idea/copilot.data.migration.ask2agent.xml
 /.idea/runConfigurations.xml
+/.idea/deviceManager.xml
 
 .DS_Store
 /build
