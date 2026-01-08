@@ -76,6 +76,11 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
 
+    //Room
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

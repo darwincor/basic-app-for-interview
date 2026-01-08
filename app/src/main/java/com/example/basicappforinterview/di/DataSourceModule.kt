@@ -1,5 +1,7 @@
 package com.example.basicappforinterview.di
 
+import com.example.basicappforinterview.data.datasource.LocalDataSource
+import com.example.basicappforinterview.data.datasource.LocalDataSourceImpl
 import com.example.basicappforinterview.data.datasource.RemoteDataSource
 import com.example.basicappforinterview.data.datasource.RemoteDataSourceImpl
 import dagger.Binds
@@ -11,5 +13,8 @@ import dagger.hilt.components.SingletonComponent
 @Module
 abstract class DataSourceModule {
     @Binds
-    abstract fun provideDataSource(dataSourceImpl: RemoteDataSourceImpl): RemoteDataSource
+    abstract fun provideRemoteDataSource(dataSourceImpl: RemoteDataSourceImpl): RemoteDataSource
+
+    @Binds
+    abstract fun provideLocalDataSource(dataSourceImpl: LocalDataSourceImpl): LocalDataSource
 }

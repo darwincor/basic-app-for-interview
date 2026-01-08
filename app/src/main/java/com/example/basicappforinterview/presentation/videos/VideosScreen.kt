@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -30,24 +33,28 @@ fun VideosScreen(
     viewModel: VideosViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
-    val list = state.videos
-    val isLoading = state.isLoading
 
-    VideosContent(isLoading = isLoading, videos = list) { video ->
-        navController.navigate(VideoDetailsScreen(videoId = video.id))
-    }
+    VideosContent(
+        isLoading = state.isLoading,
+        videos = state.videos,
+        favoriteVideos = state.favoriteVideos,
+        onEvent = { viewModel.onEvent(it) },
+        onGoToDetails = { video ->
+            navController.navigate(VideoDetailsScreen(videoId = video.id))
+        }
+    )
 }
 
 @Composable
 private fun VideosContent(
     isLoading: Boolean = false,
     videos: List<Video>,
+    favoriteVideos: List<Video>,
+    onEvent: (VideosEvent) -> Unit = {},
     onGoToDetails: (Video) -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if (isLoading) {
@@ -55,24 +62,69 @@ private fun VideosContent(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // Favorites Section (if any)
+                if (favoriteVideos.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.favorites),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
+                        )
+                    }
+                    item {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.height(100.dp)
+                        ) {
+                            items(
+                                items = favoriteVideos,
+                                key = { it.id }
+                            ) { video ->
+                                VideoItem(
+                                    modifier = Modifier
+                                        .width(280.dp)
+                                        .animateItem(),
+                                    video = video,
+                                    isFavorite = video.isFavorite,
+                                    onToggleFavorite = { onEvent(VideosEvent.ToggleFavorite(it)) },
+                                    onClick = { onGoToDetails(video) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Gallery Section
                 item {
                     Text(
                         text = stringResource(R.string.video_gallery),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
                     )
                 }
-                items(videos) { video ->
-                    VideoItem(
-                        video = video,
-                        onClick = {
-                            onGoToDetails(video)
-                        }
-                    )
+
+                items(
+                    items = videos,
+                    key = { it.id }
+                ) { video ->
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .animateItem()
+                    ) {
+                        VideoItem(
+                            video = video,
+                            isFavorite = video.isFavorite,
+                            onToggleFavorite = { onEvent(VideosEvent.ToggleFavorite(it)) },
+                            onClick = { onGoToDetails(video) }
+                        )
+                    }
                 }
             }
         }
