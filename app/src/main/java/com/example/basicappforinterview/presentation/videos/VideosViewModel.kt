@@ -15,6 +15,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.basicappforinterview.domain.util.Result
+import com.example.basicappforinterview.domain.util.onError
+import com.example.basicappforinterview.domain.util.onSuccess
+import com.example.basicappforinterview.presentation.util.asUiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,26 +51,32 @@ class VideosViewModel @Inject constructor(
                     toggleFavoriteUseCase(event.video)
                 }
             }
-        }
-    }
-
-    private fun loadVideos() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            try {
-                val videos = getVideosUseCase()
-                _state.update { currentState ->
-                    val favoriteIds = currentState.favoriteVideos.map { it.id }.toSet()
-                    currentState.copy(
-                        videos = videos.map { it.copy(isFavorite = favoriteIds.contains(it.id)) },
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false, error = e.message ?: "Unknown error") }
+            is VideosEvent.Retry -> {
+                loadVideos()
             }
         }
     }
+
+
+    private fun loadVideos() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            getVideosUseCase()
+                .onSuccess { videos ->
+                    _state.update { currentState ->
+                        val favoriteIds = currentState.favoriteVideos.map { it.id }.toSet()
+                        currentState.copy(
+                            videos = videos.map { it.copy(isFavorite = favoriteIds.contains(it.id)) },
+                            isLoading = false
+                        )
+                    }
+                }
+                .onError { error ->
+                    _state.update { it.copy(isLoading = false, error = error.asUiText()) }
+                }
+        }
+    }
+
 
     private fun observeFavorites() {
         getFavoriteVideosUseCase()

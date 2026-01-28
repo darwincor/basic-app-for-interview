@@ -7,6 +7,9 @@ import com.example.basicappforinterview.data.mapper.toEntity
 import com.example.basicappforinterview.domain.Repository
 import com.example.basicappforinterview.domain.model.Video
 import com.example.basicappforinterview.domain.model.VideoDetails
+import com.example.basicappforinterview.domain.util.AppError
+import com.example.basicappforinterview.domain.util.Result
+import com.example.basicappforinterview.domain.util.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -15,12 +18,14 @@ class RepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : Repository {
-    override suspend fun getVideos(): List<Video> {
-        return remoteDataSource.getVideos().map { it.toDomain() }
+    override suspend fun getVideos(): Result<List<Video>, AppError> {
+        return remoteDataSource.getVideos().map { list ->
+            list.map { it.toDomain() }
+        }
     }
 
-    override suspend fun getVideoDetails(videoId: String): VideoDetails {
-        return remoteDataSource.getVideoDetails(videoId).toDomain()
+    override suspend fun getVideoDetails(videoId: String): Result<VideoDetails, AppError> {
+        return remoteDataSource.getVideoDetails(videoId).map { it.toDomain() }
     }
 
     override fun getFavoriteVideos(): Flow<List<Video>> {

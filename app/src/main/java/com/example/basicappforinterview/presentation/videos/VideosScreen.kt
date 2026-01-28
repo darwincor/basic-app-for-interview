@@ -2,6 +2,7 @@ package com.example.basicappforinterview.presentation.videos
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -16,8 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material3.Button
+import com.example.basicappforinterview.presentation.util.UiText
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,11 +44,13 @@ fun VideosScreen(
         isLoading = state.isLoading,
         videos = state.videos,
         favoriteVideos = state.favoriteVideos,
+        error = state.error,
         onEvent = { viewModel.onEvent(it) },
         onGoToDetails = { video ->
             navController.navigate(VideoDetailsScreen(videoId = video.id))
         }
     )
+
 }
 
 @Composable
@@ -50,6 +58,7 @@ private fun VideosContent(
     isLoading: Boolean = false,
     videos: List<Video>,
     favoriteVideos: List<Video>,
+    error: UiText? = null,
     onEvent: (VideosEvent) -> Unit = {},
     onGoToDetails: (Video) -> Unit = {}
 ) {
@@ -59,7 +68,24 @@ private fun VideosContent(
     ) {
         if (isLoading) {
             CircularProgressIndicator()
+        } else if (error != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = error.asString(),
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { onEvent(VideosEvent.Retry) }) {
+                    Text(text = "Retry")
+                }
+            }
         } else {
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp),

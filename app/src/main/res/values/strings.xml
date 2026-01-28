@@ -7,4 +7,8 @@
     <string name="overview">Overview</string>
     <string name="video_gallery">Video Gallery</string>
     <string name="favorites">Favorites</string>
+    <string name="error_unknown">An unknown error occurred</string>
+    <string name="error_service_unavailable">Service unavailable, please check your internet connection</string>
+    <string name="error_server">Server error, please try again later</string>
+    <string name="error_client">Client error, please try again</string>
 </resources>

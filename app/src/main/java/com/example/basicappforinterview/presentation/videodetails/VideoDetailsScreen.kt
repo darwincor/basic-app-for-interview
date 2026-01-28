@@ -43,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.basicappforinterview.R
+import com.example.basicappforinterview.presentation.util.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +58,7 @@ fun VideoDetailsScreen(
         backdrop = state.backdrop,
         title = state.title,
         description = state.description,
+        error = state.error,
         onBackClick = { navController.popBackStack() }
     )
 }
@@ -69,6 +71,7 @@ fun VideoDetailsContent(
     backdrop: String = "",
     title: String = "",
     description: String = "",
+    error: UiText? = null,
     onBackClick: () -> Unit = {}
 ) {
     Box(
@@ -80,6 +83,15 @@ fun VideoDetailsContent(
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
                 color = Color.White
+            )
+        } else if (error != null) {
+            Text(
+                text = error.asString(),
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(16.dp)
             )
         } else {
             Column(

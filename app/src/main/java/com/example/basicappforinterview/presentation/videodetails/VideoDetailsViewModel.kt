@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.basicappforinterview.domain.model.VideoDetails
 import com.example.basicappforinterview.domain.usecase.GetVideoDetails
+import com.example.basicappforinterview.domain.util.AppError
 import com.example.basicappforinterview.presentation.common.VideoDetailsScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.example.basicappforinterview.domain.util.onError
+import com.example.basicappforinterview.domain.util.onSuccess
+import com.example.basicappforinterview.presentation.util.asUiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +33,7 @@ class VideoDetailsViewModel @Inject constructor(
     val state: StateFlow<VideoDetailsState> = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                getVideoDetails(args.videoId.toString())
+                loadVideoDetails(args.videoId.toString())
                 hasLoadedInitialData = true
             }
         }
@@ -38,19 +43,28 @@ class VideoDetailsViewModel @Inject constructor(
             VideoDetailsState(id = args.videoId)
         )
 
-    private fun getVideoDetails(id: String) {
+    private fun loadVideoDetails(id: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(
-                isLoading = true
+                isLoading = true,
+                error = null
             )
-            val videoDetails = getVideoDetails.invoke(id)
-            _state.value = _state.value.copy(
-                title = videoDetails.title,
-                description = videoDetails.description,
-                thumbnail = videoDetails.thumbnail,
-                backdrop = videoDetails.backdrop,
-                isLoading = false
-            )
+            getVideoDetails.invoke(id)
+                .onSuccess { videoDetails: VideoDetails ->
+                    _state.value = _state.value.copy(
+                        title = videoDetails.title,
+                        description = videoDetails.description,
+                        thumbnail = videoDetails.thumbnail,
+                        backdrop = videoDetails.backdrop,
+                        isLoading = false
+                    )
+                }
+                .onError { error: AppError ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = error.asUiText()
+                    )
+                }
         }
     }
 }
